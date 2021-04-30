@@ -24,10 +24,15 @@ TODO
 ## LP Node board   
 
 This driver is developed on the LPNode board by Ineltek. In this board the RTC is connected with
-* SDA: GPIO5
-* SCL: GPIO4
+
+**I2C Function**|** PIN **
+:-----:|:-----:
+SDA| GPIO5
+SCL| GPIO4
 
 The I2C port used is PORT0.
 
 ### Schematics
 ![LPNode schematics](images/LPNode.svg)
+
+
