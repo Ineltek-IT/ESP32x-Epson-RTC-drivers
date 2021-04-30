@@ -6,7 +6,7 @@
 # It is included in the main 'build.ninja'.
 
 # =============================================================================
-# Project: hello-world
+# Project: rtc_read_time
 # Configuration: 
 # =============================================================================
 # =============================================================================
@@ -22,7 +22,7 @@ rule CUSTOM_COMMAND
 #############################################
 # Rule for compiling C files.
 
-rule C_COMPILER__hello-world.2eelf
+rule C_COMPILER__rtc_read_time.2eelf
   depfile = $DEP_FILE
   deps = gcc
   command = /home/francesco/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/xtensa-esp32s2-elf-gcc $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out   -c $in
@@ -32,7 +32,7 @@ rule C_COMPILER__hello-world.2eelf
 #############################################
 # Rule for linking CXX executable.
 
-rule CXX_EXECUTABLE_LINKER__hello-world.2eelf
+rule CXX_EXECUTABLE_LINKER__rtc_read_time.2eelf
   command = $PRE_LINK && /home/francesco/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/xtensa-esp32s2-elf-g++  $FLAGS  $LINK_FLAGS $in  -o $TARGET_FILE $LINK_PATH $LINK_LIBRARIES && $POST_BUILD
   description = Linking CXX executable $TARGET_FILE
   restat = $RESTAT
@@ -1419,10 +1419,29 @@ rule CXX_STATIC_LIBRARY_LINKER____idf_main
 
 
 #############################################
+# Rule for compiling C files.
+
+rule C_COMPILER____idf_rx8010sj
+  depfile = $DEP_FILE
+  deps = gcc
+  command = /home/francesco/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/xtensa-esp32s2-elf-gcc $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out   -c $in
+  description = Building C object $out
+
+
+#############################################
+# Rule for linking CXX static library.
+
+rule CXX_STATIC_LIBRARY_LINKER____idf_rx8010sj
+  command = $PRE_LINK && /usr/bin/cmake -E remove $TARGET_FILE && /home/francesco/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/xtensa-esp32s2-elf-ar qc $TARGET_FILE $LINK_FLAGS $in && /home/francesco/.espressif/tools/xtensa-esp32s2-elf/esp-2020r3-8.4.0/xtensa-esp32s2-elf/bin/xtensa-esp32s2-elf-ranlib $TARGET_FILE && $POST_BUILD
+  description = Linking CXX static library $TARGET_FILE
+  restat = $RESTAT
+
+
+#############################################
 # Rule for re-running cmake.
 
 rule RERUN_CMAKE
-  command = /usr/bin/cmake -S/home/francesco/esp/ESP32x-Epson-RTC-drivers/examples/i2c_noex_test -B/home/francesco/esp/ESP32x-Epson-RTC-drivers/examples/i2c_noex_test/build
+  command = /usr/bin/cmake -S/home/francesco/esp/ESP32x-Epson-RTC-drivers/examples/rtc_read_time -B/home/francesco/esp/ESP32x-Epson-RTC-drivers/examples/rtc_read_time/build
   description = Re-running CMake...
   generator = 1
 

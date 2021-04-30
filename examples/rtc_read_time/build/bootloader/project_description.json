@@ -1,8 +1,8 @@
 {
     "project_name":       "bootloader",
     "project_path":       "/home/francesco/esp/esp-idf/components/bootloader/subproject",
-    "build_dir":          "/home/francesco/esp/ESP32x-Epson-RTC-drivers/examples/i2c_noex_test/build/bootloader",
-    "config_file":        "/home/francesco/esp/ESP32x-Epson-RTC-drivers/examples/i2c_noex_test/sdkconfig",
+    "build_dir":          "/home/francesco/esp/ESP32x-Epson-RTC-drivers/examples/rtc_read_time/build/bootloader",
+    "config_file":        "/home/francesco/esp/ESP32x-Epson-RTC-drivers/examples/rtc_read_time/sdkconfig",
     "config_defaults":    "",
     "app_elf":            "bootloader.elf",
     "app_bin":            "bootloader.bin",

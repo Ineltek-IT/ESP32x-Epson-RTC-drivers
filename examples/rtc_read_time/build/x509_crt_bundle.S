@@ -1,4 +1,4 @@
-/* * Data converted from /home/francesco/esp/ESP32x-Epson-RTC-drivers/examples/i2c_noex_test/build/esp-idf/mbedtls/x509_crt_bundle
+/* * Data converted from /home/francesco/esp/ESP32x-Epson-RTC-drivers/examples/rtc_read_time/build/esp-idf/mbedtls/x509_crt_bundle
  */
 .data
 .section .rodata.embedded

@@ -1,7 +1,7 @@
 
 #define I2C_MASTER_SDA_IO 5         // select GPIO specific to your project
 #define I2C_MASTER_SCL_IO 4
-#define I2C_MASTER_FREQ_HZ 400000
+
 #define I2C_MASTER_PORT_NUM 0
 #define RTC_ADDR 0x32
 

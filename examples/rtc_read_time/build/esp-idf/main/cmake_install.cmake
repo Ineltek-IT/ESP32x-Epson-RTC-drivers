@@ -1,4 +1,4 @@
-# Install script for directory: /home/francesco/esp/ESP32x-Epson-RTC-drivers/examples/i2c_noex_test/main
+# Install script for directory: /home/francesco/esp/ESP32x-Epson-RTC-drivers/examples/rtc_read_time/main
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)

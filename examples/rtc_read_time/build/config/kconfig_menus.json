@@ -15200,6 +15200,44 @@
                 "id": "component-config-supplicant",
                 "title": "Supplicant",
                 "type": "menu"
+            },
+            {
+                "children": [
+                    {
+                        "children": [],
+                        "depends_on": null,
+                        "help": "I2C port for the RTC",
+                        "id": "RX8010SJ_PORT",
+                        "name": "RX8010SJ_PORT",
+                        "range": null,
+                        "title": "I2C port for the RX8010SJ <0/1>",
+                        "type": "int"
+                    },
+                    {
+                        "children": [],
+                        "depends_on": null,
+                        "help": "I2C SDA pin",
+                        "id": "RX8010SJ_SDA",
+                        "name": "RX8010SJ_SDA",
+                        "range": null,
+                        "title": "I2C SDA pin for the RX8010SJ",
+                        "type": "int"
+                    },
+                    {
+                        "children": [],
+                        "depends_on": null,
+                        "help": "I2C SCL pin",
+                        "id": "RX8010SJ_SCL",
+                        "name": "RX8010SJ_SCL",
+                        "range": null,
+                        "title": "I2C SCL pin for the RX8010SJ",
+                        "type": "int"
+                    }
+                ],
+                "depends_on": null,
+                "id": "component-config-rx8010sj-i2c-setup",
+                "title": "RX8010SJ I2C Setup",
+                "type": "menu"
             }
         ],
         "depends_on": null,

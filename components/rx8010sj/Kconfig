@@ -1,0 +1,17 @@
+menu "RX8010SJ I2C Setup"
+    config RX8010SJ_PORT
+        int "I2C port for the RX8010SJ <0/1>"
+        default 0
+        help
+            I2C port for the RTC
+    config RX8010SJ_SDA
+        int "I2C SDA pin for the RX8010SJ"
+        default 5
+        help
+            I2C SDA pin
+    config RX8010SJ_SCL
+        int "I2C SCL pin for the RX8010SJ"
+        default 4
+        help
+            I2C SCL pin
+endmenu
