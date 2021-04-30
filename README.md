@@ -4,12 +4,10 @@ Epson RTC Drivers for the ESP32 family Combo WiFi/BT Modules.
 
 ## How to use the driver
 
-Clone the full directory and copy the examples/rtc_read_time
-When creating your project it's important to add the following in the CMakeLists.txt at the project level
-
-__CMakeLists.txt__
+Clone the full directory and copy the examples/rtc_read_time. When creating your project it's important to add the following in the __CMakeLists.txt__ at the project level
 ``` set(EXTRA_COMPONENT_DIRS component_folder_path) ```
 In the ```rtc_read_time``` example, the path is ```../../components```.
+
 You can add the name to a project by changing the following line ```project(rtc_read_time)```.
 
 ### I2C Config 
