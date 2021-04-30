@@ -1,6 +1,7 @@
 # ESP32x-Epson-RTC-drivers
 
-Epson RTC Drivers for the ESP32 family Combo WiFi/BT Modules.
+Epson RTC Drivers for the ESP32 family Combo WiFi/BT Modules. The RTC supported so far are
++ [RX8010SJ](https://support.epson.biz/td/api/doc_check.php?dl=app_RX8010SJ&lang=en) 
 
 ## How to use the driver
 
@@ -34,5 +35,11 @@ The I2C port used is PORT0.
 
 ### Schematics
 ![LPNode schematics](images/LPNode.svg)
+
+
+## References
+
++ [RX8010SJ datasheet](https://support.epson.biz/td/api/doc_check.php?dl=app_RX8010SJ&lang=en)
++ [RX8010SJ Linux drivers](https://www5.epsondevice.com/en/information/support/linux_rtc/)
 
 
