@@ -25,7 +25,7 @@ TODO
 
 This driver is developed on the LPNode board by Ineltek. In this board the RTC is connected with
 
-**I2C Function**|** PIN **
+I2C Function| PIN
 :-----:|:-----:
 SDA| GPIO5
 SCL| GPIO4
