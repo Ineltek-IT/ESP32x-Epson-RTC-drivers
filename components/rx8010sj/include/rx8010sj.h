@@ -3,6 +3,7 @@
 
 
 #include <stdio.h>
+#include <time.h>
 #include <sdkconfig.h>
 
 #define RX8010SJ_PORT 0 //CONFIG_RX8010SJ_PORT
@@ -48,9 +49,10 @@
 // 0x31 is reserved
 #define RX8010_REG_IRQ		0x32
 
-
+// Functions
  esp_err_t rx8010_init(void);
  esp_err_t rx8010_read_reg(uint8_t, uint8_t* , size_t );
-
+esp_err_t rx8010_write_reg(uint8_t, uint8_t , size_t );
+esp_err_t  rx8010_get_time(struct tm*);
 
 #endif //RX8010SJ_H

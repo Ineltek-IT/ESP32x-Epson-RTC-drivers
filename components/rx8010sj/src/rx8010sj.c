@@ -88,25 +88,24 @@
 }
 
 
+ esp_err_t rx8010_write_reg(uint8_t register_address, uint8_t data_rd, size_t size)
+{
+  int ret;
+    i2c_cmd_handle_t cmd = i2c_cmd_link_create();
+    i2c_master_start(cmd);
+    i2c_master_write_byte(cmd, RTC_ADDR << 1 | I2C_MASTER_WRITE, ACK_CHECK_EN);
+    i2c_master_write_byte(cmd, register_address, ACK_CHECK_EN);
+	i2c_master_write_byte(cmd, data_rd, ACK_CHECK_EN);
+    i2c_master_stop(cmd);
+    ret = i2c_master_cmd_begin(RX8010SJ_PORT, cmd, 1000 / portTICK_RATE_MS);
+    i2c_cmd_link_delete(cmd);
+    return ret;
+}
+
+
+
 
 /*
-static const struct i2c_device_id rx8010_id[] = {
-	{ "rx8010", 0 },
-	{ }
-};
-MODULE_DEVICE_TABLE(i2c, rx8010_id);
-
-struct rx8010_data {
-	struct i2c_client *client;
-	struct rtc_device *rtc;
-	struct work_struct work_1;
-	struct work_struct work_2;
-	u8 ctrlreg;
-	int irq_1;
-	int irq_2;
-	unsigned exiting:1;
-};
-
 typedef struct {
 	u8 number;
 	u8 value;
@@ -283,90 +282,46 @@ static irqreturn_t rx8010_irq_2(int irq, void *dev_id)
 	return IRQ_HANDLED;
 }
 
-//----------------------------------------------------------------------
-// rx8010_work_2()
-//
-//----------------------------------------------------------------------
-static void rx8010_work_2(struct work_struct *work)
-{
-	struct rx8010_data *rx8010 = container_of(work, struct rx8010_data, work_2);
-	struct i2c_client *client = rx8010->client;
-	struct mutex *lock = &rx8010->rtc->ops_lock;
-	u8 status;
-
-	mutex_lock(lock);
-	
-	if (rx8010_read_reg(client, RX8010_REG_FLAG, &status))
-		goto out;
-
-	// check VLF
-	if ((status & RX8010_BIT_FLAG_VLF))
-		dev_warn(&client->dev, "Frequency stop was detected, \
-								probably due to a supply voltage drop\n");
-			 
-	dev_dbg(&client->dev, "%s: RX8010_REG_FLAG: %xh\n", __func__, status);
-
-	// periodic "fixed-cycle" timer
-	if (status & RX8010_BIT_FLAG_TF) {
-		status &= ~RX8010_BIT_FLAG_TF;
-		local_irq_disable();
-		rtc_update_irq(rx8010->rtc, 1, RTC_PF | RTC_IRQF);
-		local_irq_enable();
-	}
-
-	// acknowledge IRQ (clear flags)
-	rx8010_write_reg(client, RX8010_REG_FLAG, status);		
-
-out:
-	if (!rx8010->exiting)
-	{
-		if (rx8010->irq_2 > 0)
-			enable_irq(rx8010->irq_2);
-		else
-			enable_irq(client->irq);
-	}	
-
-	mutex_unlock(lock);
-}
+*/
 
 //----------------------------------------------------------------------
 // rx8010_get_time()
 // gets the current time from the rx8010 registers
 //
 //----------------------------------------------------------------------
-static int rx8010_get_time(struct device *dev, struct rtc_time *dt)
+esp_err_t rx8010_get_time(struct tm *dt)
 {
-	struct rx8010_data *rx8010 = dev_get_drvdata(dev);
-	u8 date[7];
-	int err;
-
-	err = rx8010_read_regs(rx8010->client, RX8010_REG_SEC, 7, date);
-	if (err)
-		return err;
-
-	dev_dbg(dev, "%s: read 0x%02x 0x%02x "
-		"0x%02x 0x%02x 0x%02x 0x%02x 0x%02x\n", __func__,
-		date[0], date[1], date[2], date[3], date[4], date[5], date[6]);
-
+	uint8_t *data_rd = (uint8_t *)malloc(1);
 	//Note: need to subtract 0x10 for index as register offset starts at 0x10
-	dt->tm_sec = bcd2bin(date[RX8010_REG_SEC-0x10] & 0x7f);
+/*	dt->tm_sec = bcd2bin(date[RX8010_REG_SEC-0x10] & 0x7f);
 	dt->tm_min = bcd2bin(date[RX8010_REG_MIN-0x10] & 0x7f);
 	dt->tm_hour = bcd2bin(date[RX8010_REG_HOUR-0x10] & 0x3f);	//only 24-hour clock
 	dt->tm_mday = bcd2bin(date[RX8010_REG_MDAY-0x10] & 0x3f);
 	dt->tm_mon = bcd2bin(date[RX8010_REG_MONTH-0x10] & 0x1f) - 1;
 	dt->tm_year = bcd2bin(date[RX8010_REG_YEAR-0x10]);
-	dt->tm_wday = bcd2bin(date[RX8010_REG_WDAY-0x10] & 0x7f);
+	dt->tm_wday = bcd2bin(date[RX8010_REG_WDAY-0x10] & 0x7f);*/
 
-	if (dt->tm_year < 70)
+	int ret= rx8010_read_reg(RX8010_REG_SEC,data_rd,1);
+	dt->tm_sec = *data_rd;
+	ret= rx8010_read_reg(RX8010_REG_MIN,data_rd,1);
+	dt->tm_min = *data_rd;
+	ret= rx8010_read_reg(RX8010_REG_HOUR,data_rd,1);
+	dt->tm_hour = *data_rd;
+	ret= rx8010_read_reg(RX8010_REG_MDAY,data_rd,1);
+	dt->tm_mday = *data_rd;
+	ret= rx8010_read_reg(RX8010_REG_MONTH,data_rd,1);
+	dt->tm_mon = *data_rd;
+	ret= rx8010_read_reg(RX8010_REG_YEAR,data_rd,1);
+	dt->tm_year = *data_rd;
+	ret= rx8010_read_reg(RX8010_REG_WDAY,data_rd,1);
+	dt->tm_wday = *data_rd;
+
+	if (dt->tm_year < 70) //??
 		dt->tm_year += 100;
 
-	dev_dbg(dev, "%s: date %ds %dm %dh %dmd %dm %dy\n", __func__,
-		dt->tm_sec, dt->tm_min, dt->tm_hour,
-		dt->tm_mday, dt->tm_mon, dt->tm_year);
-
-	return rtc_valid_tm(dt);
+	return ret;
 }
-
+/*
 //----------------------------------------------------------------------
 // rx8010_set_time()
 // Sets the current time in the rx8010 registers
