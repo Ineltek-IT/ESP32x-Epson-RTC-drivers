@@ -21,16 +21,21 @@
 
 void app_main(void)
 {
-    time_t now = 1620139886;
-    struct tm timetest;
-    printf("Now: %ld\n",now);
-
-    localtime_r(&now, &timetest);
-    int ret;
+    time_t now; 
+    struct tm set_time_tm;
+    struct tm get_time_tm;
     uint8_t *data_rd = (uint8_t *)malloc(1);
-    struct tm timeinfo;
+    int ret;
+
+    now = 1620139886;
+
+    printf("Now: %ld\n",now);
+    localtime_r(&now, &set_time_tm);
+
+
+    
     ret = rx8010_init();
-    rx8010_set_time(&timetest);
+    rx8010_set_time(&set_time_tm);
 
     for (int i = 1000; i >= 0; i--) {
         ret = rx8010_read_reg(RX8010_REG_HOUR, data_rd, 1);
@@ -39,9 +44,10 @@ void app_main(void)
         printf("%02x : ", *data_rd);
         ret = rx8010_read_reg(RX8010_REG_SEC, data_rd, 1);
         printf("%02x\n", *data_rd);
+
         vTaskDelay(2000 / portTICK_PERIOD_MS);
-        rx8010_get_time(&timeinfo);
-        printf("From get time %02x\n", timeinfo.tm_sec);
+        rx8010_get_time(&get_time_tm);
+        printf("From get time %d\n", get_time_tm.tm_sec);
         
     }
     printf("Restarting now.\n");

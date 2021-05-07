@@ -293,29 +293,25 @@ static irqreturn_t rx8010_irq_2(int irq, void *dev_id)
 esp_err_t rx8010_get_time(struct tm *dt)
 {
 	uint8_t *data_rd = (uint8_t *)malloc(1);
-	//Note: need to subtract 0x10 for index as register offset starts at 0x10
-/*	dt->tm_sec = bcd2bin(date[RX8010_REG_SEC-0x10] & 0x7f);
-	dt->tm_min = bcd2bin(date[RX8010_REG_MIN-0x10] & 0x7f);
-	dt->tm_hour = bcd2bin(date[RX8010_REG_HOUR-0x10] & 0x3f);	//only 24-hour clock
-	dt->tm_mday = bcd2bin(date[RX8010_REG_MDAY-0x10] & 0x3f);
-	dt->tm_mon = bcd2bin(date[RX8010_REG_MONTH-0x10] & 0x1f) - 1;
-	dt->tm_year = bcd2bin(date[RX8010_REG_YEAR-0x10]);
-	dt->tm_wday = bcd2bin(date[RX8010_REG_WDAY-0x10] & 0x7f);*/
+	
+	
+	//Note: The bit masks are taken from the linux driver for this RTC
+
 
 	int ret= rx8010_read_reg(RX8010_REG_SEC,data_rd,1);
-	dt->tm_sec = *data_rd;
+	dt->tm_sec = bcd2bin(*data_rd & 0x7f);
 	ret= rx8010_read_reg(RX8010_REG_MIN,data_rd,1);
-	dt->tm_min = *data_rd;
+	dt->tm_min = bcd2bin(*data_rd & 0x7f);
 	ret= rx8010_read_reg(RX8010_REG_HOUR,data_rd,1);
-	dt->tm_hour = *data_rd;
+	dt->tm_hour = bcd2bin(*data_rd & 0x3f);
 	ret= rx8010_read_reg(RX8010_REG_MDAY,data_rd,1);
-	dt->tm_mday = *data_rd;
+	dt->tm_mday = bcd2bin(*data_rd & 0x3f);
 	ret= rx8010_read_reg(RX8010_REG_MONTH,data_rd,1);
-	dt->tm_mon = *data_rd;
+	dt->tm_mon = bcd2bin(*data_rd & 0x1f)-1;
 	ret= rx8010_read_reg(RX8010_REG_YEAR,data_rd,1);
-	dt->tm_year = *data_rd;
+	dt->tm_year = bcd2bin(*data_rd);
 	ret= rx8010_read_reg(RX8010_REG_WDAY,data_rd,1);
-	dt->tm_wday = *data_rd;
+	dt->tm_wday = bcd2bin(*data_rd & 0x7f);
 
 	if (dt->tm_year < 70) //??
 		dt->tm_year += 100;
@@ -336,13 +332,13 @@ esp_err_t rx8010_get_time(struct tm *dt)
 //----------------------------------------------------------------------
 esp_err_t rx8010_set_time(struct tm *dt){
 
-	int ret= rx8010_write_reg(RX8010_REG_SEC,dt->tm_sec,1);
-	ret = rx8010_write_reg(RX8010_REG_MIN,dt->tm_min,1);
-	ret = rx8010_write_reg(RX8010_REG_HOUR,bin2bcd(dt->tm_hour),1);
-	ret= rx8010_write_reg(RX8010_REG_MDAY,dt->tm_mday,1);
-	ret= rx8010_write_reg(RX8010_REG_MONTH,dt->tm_mon,1);
-	ret= rx8010_write_reg(RX8010_REG_YEAR,dt->tm_year,1);
-	ret= rx8010_write_reg(RX8010_REG_WDAY,dt->tm_wday,1);
+	int ret= rx8010_write_reg(RX8010_REG_SEC,bin2bcd(dt->tm_sec),1);
+	ret += rx8010_write_reg(RX8010_REG_MIN,bin2bcd(dt->tm_min),1);
+	ret += rx8010_write_reg(RX8010_REG_HOUR,bin2bcd(dt->tm_hour),1);
+	ret += rx8010_write_reg(RX8010_REG_MDAY,bin2bcd(dt->tm_mday),1);
+	ret += rx8010_write_reg(RX8010_REG_MONTH,bin2bcd(dt->tm_mon+1),1);
+	ret += rx8010_write_reg(RX8010_REG_YEAR,bin2bcd(dt->tm_year%200),1);
+	ret += rx8010_write_reg(RX8010_REG_WDAY,bin2bcd(dt->tm_wday),1);
 
 	return ret;
 }
