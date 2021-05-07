@@ -19,6 +19,7 @@
 #include "freertos/task.h"
 #include "driver/i2c.h"
 #include "../include/rx8010sj.h"
+#include "../include/conversions.h"
 
 // Help definitions
 #define ACK_CHECK_EN 0x1                        /*!< I2C master will check ack from slave*/
@@ -321,7 +322,7 @@ esp_err_t rx8010_get_time(struct tm *dt)
 
 	return ret;
 }
-/*
+
 //----------------------------------------------------------------------
 // rx8010_set_time()
 // Sets the current time in the rx8010 registers
@@ -333,41 +334,19 @@ esp_err_t rx8010_get_time(struct tm *dt)
 //       register is written
 //
 //----------------------------------------------------------------------
-static int rx8010_set_time(struct device *dev, struct rtc_time *dt)
-{
-	struct rx8010_data *rx8010 = dev_get_drvdata(dev);
-	u8 date[7];
-	u8 ctrl;
-	int ret;
+esp_err_t rx8010_set_time(struct tm *dt){
 
-	//set STOP bit before changing clock/calendar
-	rx8010_read_reg(rx8010->client, RX8010_REG_CTRL, &ctrl);
-	rx8010->ctrlreg = ctrl | RX8010_BIT_CTRL_STOP;
-	rx8010_write_reg(rx8010->client, RX8010_REG_CTRL, rx8010->ctrlreg);
-	
-	//Note: need to subtract 0x10 for index as register offset starts at 0x10
-	date[RX8010_REG_SEC-0x10] = bin2bcd(dt->tm_sec);
-	date[RX8010_REG_MIN-0x10] = bin2bcd(dt->tm_min);
-	date[RX8010_REG_HOUR-0x10] = bin2bcd(dt->tm_hour);		//only 24hr time
-
-	date[RX8010_REG_MDAY-0x10] = bin2bcd(dt->tm_mday);
-	date[RX8010_REG_MONTH-0x10] = bin2bcd(dt->tm_mon + 1);
-	date[RX8010_REG_YEAR-0x10] = bin2bcd(dt->tm_year % 100);
-	date[RX8010_REG_WDAY-0x10] = bin2bcd(dt->tm_wday);
-
-	dev_dbg(dev, "%s: write 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x\n",
-		__func__, date[0], date[1], date[2], date[3], date[4], date[5], date[6]);
-
-	ret =  rx8010_write_regs(rx8010->client, RX8010_REG_SEC, 7, date);
-
-	//clear STOP bit after changing clock/calendar
-	rx8010_read_reg(rx8010->client, RX8010_REG_CTRL, &ctrl);
-	rx8010->ctrlreg = ctrl & ~RX8010_BIT_CTRL_STOP;
-	rx8010_write_reg(rx8010->client, RX8010_REG_CTRL, rx8010->ctrlreg);
+	int ret= rx8010_write_reg(RX8010_REG_SEC,dt->tm_sec,1);
+	ret = rx8010_write_reg(RX8010_REG_MIN,dt->tm_min,1);
+	ret = rx8010_write_reg(RX8010_REG_HOUR,bin2bcd(dt->tm_hour),1);
+	ret= rx8010_write_reg(RX8010_REG_MDAY,dt->tm_mday,1);
+	ret= rx8010_write_reg(RX8010_REG_MONTH,dt->tm_mon,1);
+	ret= rx8010_write_reg(RX8010_REG_YEAR,dt->tm_year,1);
+	ret= rx8010_write_reg(RX8010_REG_WDAY,dt->tm_wday,1);
 
 	return ret;
 }
-
+/*
 //----------------------------------------------------------------------
 // rx8010_init_client()
 // initializes the rx8010

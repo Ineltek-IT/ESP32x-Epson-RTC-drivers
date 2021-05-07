@@ -15,20 +15,22 @@
 #include "driver/i2c.h"
 //#include "i2c_port_config.h"
 #include "rx8010sj.h"
+#include "conversions.h"
+
 
 
 void app_main(void)
 {
-    printf("Hello world!\n");
+    time_t now = 1620139886;
+    struct tm timetest;
+    printf("Now: %ld\n",now);
+
+    localtime_r(&now, &timetest);
     int ret;
     uint8_t *data_rd = (uint8_t *)malloc(1);
     struct tm timeinfo;
     ret = rx8010_init();
-
-    printf("Writing 16:43:10\n");
-    ret= rx8010_write_reg(RX8010_REG_SEC,0x10,1);
-    ret= rx8010_write_reg(RX8010_REG_MIN,0x43,1);
-    ret= rx8010_write_reg(RX8010_REG_HOUR,0x16,1);
+    rx8010_set_time(&timetest);
 
     for (int i = 1000; i >= 0; i--) {
         ret = rx8010_read_reg(RX8010_REG_HOUR, data_rd, 1);

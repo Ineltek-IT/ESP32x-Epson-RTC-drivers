@@ -50,9 +50,10 @@
 #define RX8010_REG_IRQ		0x32
 
 // Functions
- esp_err_t rx8010_init(void);
- esp_err_t rx8010_read_reg(uint8_t, uint8_t* , size_t );
+esp_err_t rx8010_init(void);
+esp_err_t rx8010_read_reg(uint8_t, uint8_t* , size_t );
 esp_err_t rx8010_write_reg(uint8_t, uint8_t , size_t );
 esp_err_t  rx8010_get_time(struct tm*);
+esp_err_t rx8010_set_time(struct tm*);
 
 #endif //RX8010SJ_H
