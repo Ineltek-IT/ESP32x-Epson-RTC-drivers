@@ -33,6 +33,12 @@ SCL| GPIO4
 
 The I2C port used is PORT0.
 
+## TODO
+- [x] Implement set time
+- [ ] Sntp example
+- [ ] IRQ functions in the driver
+- [ ] IRQ low power / deep sleep example
+
 ### Schematics
 ![LPNode schematics](images/LPNode.svg)
 
